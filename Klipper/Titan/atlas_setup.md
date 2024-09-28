@@ -205,8 +205,41 @@ WARNING: There appears to be an issue with some earlier EBB board where updating
 A sample config can be found [here](https://github.com/bigtreetech/EBB/blob/master/EBB%20CAN%20V1.1%20and%20V1.2%20(STM32G0B1)/sample-bigtreetech-ebb-canbus-v1.2.cfg)
 
 
+# Step 7: Add temperature overview to Mainsail
+First we need to install the klipper firmware on the pi (see [here](https://www.klipper3d.org/RPi_microcontroller.html):
+
+```bash
+cd ~/klipper/
+sudo cp ./scripts/klipper-mcu.service /etc/systemd/system/
+sudo systemctl enable klipper-mcu.service
+
+cd ~/klipper/
+make menuconfig
+```
+
+Select:
+- Microcontroller: Linux process
+
+```bash
+sudo service klipper stop
+make flash
+sudo service klipper start
+
+sudo usermod -a -G tty pi
+```
+
+Now in the printer config add the pi as a MCU and add the section for the temperature sensor
+
+```
+[mcu rpi]
+serial: /tmp/klipper_host_mcu
 
 
+[temperature_sensor raspberry_pi]
+sensor_type: temperature_host
+min_temp: 10
+max_temp: 130
+```
 
 
 
