@@ -1,0 +1,63 @@
+import FreeCAD as App
+import FreeCADGui as Gui
+import Sketcher
+import Part
+
+doc = App.ActiveDocument
+if doc is None:
+    raise RuntimeError("No active document found.")
+
+# Get active sketch in edit mode
+sketch_edit = Gui.ActiveDocument.getInEdit()
+if not sketch_edit or not hasattr(sketch_edit, "Object") or sketch_edit.Object.TypeId != "Sketcher::SketchObject":
+    raise RuntimeError("Please open a sketch in Sketcher workbench before running this macro.")
+
+sketch = sketch_edit.Object
+
+# --- Create center point ---
+center_point_index = sketch.addGeometry(Part.Point(App.Vector(0, 0, 0)), False)
+
+# --- Add four circles at rough positions ---
+radius = 5  # placeholder, user will edit later
+offset = 10 # placeholder, user will edit later
+
+circle_indices = []
+circle_positions = [
+    App.Vector(-offset,  offset, 0),  # top left
+    App.Vector( offset,  offset, 0),  # top right
+    App.Vector(-offset, -offset, 0),  # bottom left
+    App.Vector( offset, -offset, 0)   # bottom right
+]
+
+for pos in circle_positions:
+    idx = sketch.addGeometry(Part.Circle(pos, App.Vector(0, 0, 1), radius), False)
+    circle_indices.append(idx)
+
+# --- Add constraints ---
+# Equal diameter constraints (all circles equal to the first)
+for idx in circle_indices[1:]:
+    sketch.addConstraint(Sketcher.Constraint('Equal', circle_indices[0], idx))
+
+
+
+# Symmetry constraints
+# Top pair symmetric over vertical axis
+sketch.addConstraint(Sketcher.Constraint('Symmetric',
+    circle_indices[0], 3,  # top left center
+    circle_indices[3], 3,  # bottom right center
+    center_point_index, 1  # center point
+))
+
+
+
+# Horizontal constraints on top and bottom pairs
+sketch.addConstraint(Sketcher.Constraint('Horizontal', circle_indices[0], 3, circle_indices[1], 3))
+sketch.addConstraint(Sketcher.Constraint('Horizontal', circle_indices[2], 3, circle_indices[3], 3))
+
+# Vertical constraints on left and right pairs
+sketch.addConstraint(Sketcher.Constraint('Vertical', circle_indices[0], 3, circle_indices[2], 3))
+sketch.addConstraint(Sketcher.Constraint('Vertical', circle_indices[1], 3, circle_indices[3], 3))
+
+doc.recompute()
+
+print("Created center point and 4 circles with symmetry, equal, horizontal, and vertical constraints.")
