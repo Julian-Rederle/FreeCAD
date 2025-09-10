@@ -1,0 +1,30 @@
+[Unit]
+Description=Play boot video and start KlipperScreen on TFT43 and then start KlipperScreen
+DefaultDependencies=no
+After=systemd-modules-load.service
+Before=getty@tty1.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=2
+User=beast
+SupplementaryGroups=klipperscreen
+WorkingDirectory=/home/beast/KlipperScreen
+Environment="KS_XCLIENT=/home/beast/.KlipperScreen-env/bin/python /home/beast/KlipperScreen/screen.py" BACKEND=X
+ExecStart=/bin/bash -c "/usr/bin/mpv --fs --no-audio /home/beast/LogoToRedLab.mp4 && /home/beast/KlipperScreen/scripts/KlipperScreen-start.sh"
+
+# Log this user with utmp, letting it show up with commands 'w' and
+# 'who'. This is needed since we replace (a)getty.
+UtmpIdentifier=tty7
+UtmpMode=user
+# Create a PAM session to run pam-systemd, which creates /var/run/$UID
+PAMName=%u
+# A virtual terminal is needed.
+TTYPath=/dev/tty7
+TTYReset=yes
+TTYVHangup=yes
+TTYVTDisallocate=yes
+
+[Install]
+WantedBy=multi-user.target

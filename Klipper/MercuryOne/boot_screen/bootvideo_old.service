@@ -1,0 +1,20 @@
+[Unit]
+Description=Play boot video and start KlipperScreen on TFT43
+DefaultDependencies=no
+After=systemd-modules-load.service
+Before=getty@tty1.service
+
+[Service]
+Type=simple
+User=beast
+Environment=FRAMEBUFFER=/dev/tb0 "KS_XCLIENT=/home/beast/.KlipperScreen-env/bin/python /home/beast/KlipperScreen/screen.py" BACKEND=X
+WorkingDirectory=/home/beast/KlipperScreen
+ExecStart=/bin/bash -c "/usr/bin/mpv --fs --no-audio /home/beast/LogoToRedLab.mp4 && /home/beast/KlipperScreen/scripts/KlipperScreen-start.sh"
+StandardInput=tty
+StandardOutput=tty
+TTYPath=/dev/tty1
+RemainAfterExit=no
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

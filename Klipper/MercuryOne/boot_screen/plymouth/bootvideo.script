@@ -1,0 +1,14 @@
+wallpaper_image = Image("images/frame_0001.png")
+frame_count = 0
+frames = []
+
+for i in range(1, 0606):
+    try:
+        frames.append(Image("images/frame_%04d.png" % i))
+    except:
+        break
+
+while True:
+    for frame in frames:
+        frame.Show()
+        sleep(0.033)  # roughly 30 FPS
