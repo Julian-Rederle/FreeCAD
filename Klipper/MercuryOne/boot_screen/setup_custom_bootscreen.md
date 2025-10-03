@@ -1,19 +1,19 @@
 # Install required packets
 ```bash
-sudo apt install mpv
+sudo apt install mpv -y
 ```
 
 # Copy Video over
 ```bash
-scp LogoToRedLab.mp4 beast@TheSmallBeast2:/home/beast/.
+scp LogoToRedLab_red.mp4 freddie@mercuryone:/home/freddie/LogoToRedLab.mp4
 ```
 
 # Copy custom service + video
 ```bash
-scp bootvideo.service beast@TheSmallBeast2:/home/beast/bootvideo.service
+scp bootvideo.service freddie@mercuryone:/home/freddie/bootvideo.service
 
 # on Pi
-cp /home/beast/bootvideo.service /etc/systemd/system/bootvideo.service
+sudo cp /home/freddie/bootvideo.service /etc/systemd/system/bootvideo.service
 ```
 
 # Enable service
@@ -23,5 +23,5 @@ sudo systemctl enable bootvideo.service
 
 # Disable regular klipperscreen boot
 ```bash
-systemctl disable KlipperScreen.service
+sudo systemctl disable KlipperScreen.service
 ```

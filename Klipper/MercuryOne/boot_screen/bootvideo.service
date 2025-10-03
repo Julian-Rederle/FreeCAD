@@ -8,11 +8,11 @@ Before=getty@tty1.service
 Type=simple
 Restart=always
 RestartSec=2
-User=beast
+User=freddie
 SupplementaryGroups=klipperscreen
-WorkingDirectory=/home/beast/KlipperScreen
-Environment="KS_XCLIENT=/home/beast/.KlipperScreen-env/bin/python /home/beast/KlipperScreen/screen.py" BACKEND=X
-ExecStart=/bin/bash -c "/usr/bin/mpv --fs --no-audio /home/beast/LogoToRedLab.mp4 && /home/beast/KlipperScreen/scripts/KlipperScreen-start.sh"
+WorkingDirectory=/home/freddie/KlipperScreen
+Environment="KS_XCLIENT=/home/freddie/.KlipperScreen-env/bin/python /home/freddie/KlipperScreen/screen.py" BACKEND=X
+ExecStart=/bin/bash -c "/usr/bin/mpv --fs --no-audio /home/freddie/LogoToRedLab.mp4 && /home/freddie/KlipperScreen/scripts/KlipperScreen-start.sh"
 
 # Log this user with utmp, letting it show up with commands 'w' and
 # 'who'. This is needed since we replace (a)getty.
